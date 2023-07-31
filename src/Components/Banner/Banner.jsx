@@ -7,101 +7,97 @@ import requests from '../../request';
 
 function Banner() {
   const [movie, setMovie] = useState([]);
-//   const [trailerurl, setTrailerurl] = useState("");
+  //   const [trailerurl, setTrailerurl] = useState("");
 
   useEffect(() => {
-      
-    async function fetchData() {
-        const request = await axios.get(requests.fetchNetflixOriginals) ;
 
-        setMovie(
-            request.data.results[
-                Math.floor(Math.random() * request.data.results.length - 1)
-            ]
-        );
-        return request;
-       
+    async function fetchData() {
+      const request = await axios.get(requests.fetchNetflixOriginals);
+
+      setMovie(
+        request.data.results[
+        Math.floor(Math.random() * request.data.results.length - 1)
+        ]
+      );
+      return request;
+
     } fetchData();
 
-  }, []) 
+  }, [])
 
-    function truncate(str ,n) {
-      return str?.length > n ? str.substr(0, n - 1) + "..." : str;  
+  function truncate(str, n) {
+    return str?.length > n ? str.substr(0, n - 1) + "..." : str;
 
-//       const handleClick = (movie) => {
-        
-//         if(trailerurl){
-//           setTrailerurl("");
-//         }else{
-//           movieTrailer(movie?.name || "")
-//           .then(url => {
-//             const urlParams = new URLSearchParams( new URL(url).search);
-//             setTrailerurl(urlParams.get('v'));
-   
-//           }).catch(error => console.log(error))
-//         }
-//           };
+    //       const handleClick = (movie) => {
 
-//           const opts = {
-//             height: "390",
-//             width: "100%",
-//             playerVars: {
-//               autoplay:1,
-//             },
-          }
-  
-    return (
-      <>
-       <header className="banner"
-    // banner image 
-       onClick={() => setTrailerurl("")}
-       style={{
-           backgroundSize: "cover",
-           backgroundImage: `url(
-               "https://image.tmdb.org/t/p/original/${movie?.backdrop_path}"
-           )`,
-           backgroundPosition: "center-center",
-       }}
-       >
+    //         if(trailerurl){
+    //           setTrailerurl("");
+    //         }else{
+    //           movieTrailer(movie?.name || "")
+    //           .then(url => {
+    //             const urlParams = new URLSearchParams( new URL(url).search);
+    //             setTrailerurl(urlParams.get('v'));
 
-          <div className="banner__contents"></div>
+    //           }).catch(error => console.log(error))
+    //         }
+    //           };
 
-{/* banner heading  */}
-               <h1 className="banner__title">
-                   {movie?.title || movie?.name || movie?.original_name}
-               </h1>
+    //           const opts = {
+    //             height: "390",
+    //             width: "100%",
+    //             playerVars: {
+    //               autoplay:1,
+    //             },
+  }
 
-               {/* 2 buttons  */}
-                <div className="banner__buttons">
+  return (
+    <div>
+      <header className="banner"
+        onClick={() => setTrailerurl("")}
+        style={{
+          backgroundSize: "cover",
+          backgroundImage: `url(
+                     "https://image.tmdb.org/t/p/original/${movie?.backdrop_path}"
+                 )`,
+          backgroundPosition: "center-center",
+        }}
+      >
 
-                   <button
-                    onClick={()=> handleClick(movie)}
+        <span className="banner__contents">
 
-                     className="banner__button">
-                     Play
-                   </button>
-                   <button className="banner__button">
-                     My List 
-                   </button>
+          <h1 className="banner__title">
+            {movie?.title || movie?.name || movie?.original_name}
+          </h1>
+          <div className="banner__buttons">
 
-               </div>
+            <button
+              onClick={() => handleClick(movie)}
 
-            {/* Banner Descripition  */}
-              <h1 className="banner__description">
+              className="banner__button">
+              Play
+            </button>
+            <button className="banner__button">
+              My List
+            </button>
 
-                  {truncate(movie?.overview, 150)}
-              </h1>
-              
-            {/* <div className="banner--fadeBottom"/> */}  
-         
-       </header>
-      
-       {/* {trailerurl && <YouTube
-             videoId={trailerurl}  
-             opts={opts}
-            />}  */}
-      </>
-    )
+          </div>
+          <h1 className="banner__description">
+
+            {truncate(movie?.overview, 150)}
+
+          </h1>
+        </span>
+
+        <div className="banner--fadeBottom" />
+
+      </header>
+
+      {/* {trailerurl && <YouTube
+        videoId={trailerurl}
+        opts={opts}
+      />} */}
+    </div>
+  )
 }
 
-export default Banner;
+export default Banner
