@@ -16,49 +16,96 @@ const opts = {
 function Row({ title, fetchUrl, isLargeRow }) {
   const [movies, setMovies] = useState([]);
   const [trailerUrl, setTrailerUrl] = useState("");
+  const [showTrailerNotFound, setShowTrailerNotFound] = useState(false);
+  const [playingIndex, setPlayingIndex] = useState(null);
 
+  // Fetch movie data when the component mounts or fetchUrl changes
   useEffect(() => {
     async function fetchData() {
-      const request = await axios.get(fetchUrl);
-      setMovies(request.data.results);
-      return request;
+      try {
+        const request = await axios.get(fetchUrl);
+        setMovies(request.data.results);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     }
     fetchData();
   }, [fetchUrl]);
 
-  const handleClick = (movie) => {
-    if (trailerUrl) {
+  // Handle click on a movie poster to show its trailer
+  const handleClick = (movie, index) => {
+    if (playingIndex !== null) {
       setTrailerUrl("");
-    } else {
+      setPlayingIndex(null);
+    }
+
+    if (playingIndex !== index) {
+      setPlayingIndex(index);
+
+      // Find and set the YouTube trailer URL for the selected movie
       movieTrailer(movie?.name || "")
         .then((url) => {
           const urlParams = new URLSearchParams(new URL(url).search);
           setTrailerUrl(urlParams.get('v'));
+          setShowTrailerNotFound(false);
         })
-        .catch(error => console.log(error));
+        .catch(() => {
+          // If the trailer is not found, show a message for a short time
+          setTrailerUrl("");
+          setShowTrailerNotFound(true);
+          setTimeout(() => {
+            setShowTrailerNotFound(false);
+          }, 1000);
+        });
     }
+  };
+
+  // Handle click on "Cut Trailer" button to stop and hide the trailer
+  const handleCutTrailer = () => {
+    setTrailerUrl("");
+    setPlayingIndex(null);
   };
 
   return (
     <div className="row">
       <h2>{title}</h2>
       <div className="row__posters">
-        {movies?.map(movie => (
+        {movies?.map((movie, index) => (
           <img
             key={movie.id}
-            onClick={() => handleClick(movie)}
+            onClick={() => handleClick(movie, index)}
             className={`row__poster  ${isLargeRow && "row__posterLarge"} `}
             src={`${baseUrl}${isLargeRow ? movie?.poster_path : movie?.backdrop_path}`}
             alt={movie.name}
           />
         ))}
       </div>
-      <div style={{ position: "relative", width: "100%" }}>
-        {trailerUrl && <YouTube
-          videoId={trailerUrl}
-          opts={opts}
-          style={{ position: "absolute", top: 0, left: 0, width: "100%", zIndex: 2 }}
-        />}
+      <div className='trailerUrl-container'>
+        {trailerUrl ? (
+          // If a trailer URL is available, show the YouTube player and "Cut Trailer" button
+          <>
+            <YouTube
+              videoId={trailerUrl}
+              opts={opts}
+              className='youtube'
+            />
+            <button
+              className="cutButton"
+              onClick={handleCutTrailer}
+            >
+              Cut Trailer
+            </button>
+          </>
+        ) : (
+          // If no trailer URL, show a message if the trailer is not found
+          <div id='not-found'>
+            {showTrailerNotFound && (
+              <h3>
+                Trailer not found
+              </h3>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

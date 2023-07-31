@@ -33,3 +33,51 @@
 .row__posterLarge:hover {
     transform: scale(1.09);
 }
+
+h3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: green;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+#not-found {
+    position: relative;
+    width: 100%;
+    height: 370px;
+}
+
+.cutButton {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .youtube {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+  }
+
+  .trailerUrl-container {
+    position: relative;
+    width: 100%;
+  }
+  
