@@ -66,6 +66,8 @@ function Row({ title, fetchUrl, isLargeRow }) {
     setPlayingIndex(null);
   };
 
+  const youtubeContainerKey = trailerUrl ? `youtube-${trailerUrl}` : 'youtube';
+
   return (
     <div className="row">
       <h2>{title}</h2>
@@ -82,8 +84,8 @@ function Row({ title, fetchUrl, isLargeRow }) {
       </div>
       <div className='trailerUrl-container'>
         {trailerUrl ? (
-          // If a trailer URL is available, show the YouTube player and "Cut Trailer" button
-          <>
+          // Wrap the YouTube component in a container with a unique key
+          <div key={youtubeContainerKey}>
             <YouTube
               videoId={trailerUrl}
               opts={opts}
@@ -95,9 +97,8 @@ function Row({ title, fetchUrl, isLargeRow }) {
             >
               Cut Trailer
             </button>
-          </>
+          </div>
         ) : (
-          // If no trailer URL, show a message if the trailer is not found
           <div id='not-found'>
             {showTrailerNotFound && (
               <h3>
